@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import './App.css';
 import { getChampionNames, getChampionImageSource } from './api.js';
 import { CardContainer } from './components/cardContainer.jsx';
@@ -28,60 +28,60 @@ function App() {
     if (champions.length > 0) {
       setImages(getRandomElementsWithoutDuplicates(champions, 8));
     }
-  }, [champions]);
+  }, [champions, getRandomElementsWithoutDuplicates]); // Added getRandomElementsWithoutDuplicates here
 
-  
-
-  function shuffleArray(array) {
+  const shuffleArray = useCallback((array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-  }
+  }, []);
 
-  function getRandomElementsWithoutDuplicates(array, numElements) {
+  const getRandomElementsWithoutDuplicates = useCallback((array, numElements) => {
     if (numElements > array.length) {
       throw new Error("Not enough elements in the array to select without duplicates.");
     }
     const shuffledArray = shuffleArray([...array]);
     return shuffledArray.slice(0, numElements);
-  }
+  }, [shuffleArray]);
 
-  const cardArray = useMemo(() => {
-    return images.map((value) => ({
-      imageSrc: getChampionImageSource(value),
-      championName: value,
-      handleClick: (e) => handleClick(e),
-    }));
-  }, [images]);
+  const resetGame = useCallback(() => {
+    setPlayerScore(0);
+    setClickedChampions([]); // Clear clicked champions
+    setImages(getRandomElementsWithoutDuplicates(champions, 8));
+  }, [champions, getRandomElementsWithoutDuplicates]);
 
-  function handleClick(e) {
+  const checkClickedChampion = useCallback((champion) => {
+    return clickedChampions.includes(champion);
+  }, [clickedChampions]);
+
+  const handleClick = useCallback((e) => {
     const clickedChampion = e.target.alt;
     const isClicked = checkClickedChampion(clickedChampion);
 
     if (isClicked) {
       resetGame();
     } else {
-      setClickedChampions([...clickedChampions, clickedChampion]); // Update without mutating state
-      setPlayerScore(playerScore + 1);
-      if (playerScore + 1 > bestScore) {
-        setBestScore(playerScore + 1);
-      }
+      setClickedChampions((prev) => [...prev, clickedChampion]); // Update without mutating state
+      setPlayerScore((prev) => {
+        const newScore = prev + 1;
+        if (newScore > bestScore) {
+          setBestScore(newScore);
+        }
+        return newScore;
+      });
       setImages(getRandomElementsWithoutDuplicates(champions, 8));
     }
-  }
+  }, [bestScore, champions, checkClickedChampion, getRandomElementsWithoutDuplicates, resetGame]);
 
-  function resetGame() {
-    setPlayerScore(0);
-    setClickedChampions([]); // Clear clicked champions
-    setImages(getRandomElementsWithoutDuplicates(champions, 8));
-  }
-
-  function checkClickedChampion(champion) {
-    return Array.isArray(clickedChampions) && clickedChampions.some((value) => value === champion);
-  }
-  
+  const cardArray = useMemo(() => {
+    return images.map((value) => ({
+      imageSrc: getChampionImageSource(value),
+      championName: value,
+      handleClick,
+    }));
+  }, [images, handleClick]);
 
   return (
     <>
