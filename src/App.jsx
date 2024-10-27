@@ -28,7 +28,7 @@ function App() {
     if (champions.length > 0) {
       setImages(getRandomElementsWithoutDuplicates(champions, 8));
     }
-  }, [champions, getRandomElementsWithoutDuplicates]); // Added getRandomElementsWithoutDuplicates here
+  }, [champions]);
 
   const shuffleArray = useCallback((array) => {
     for (let i = array.length - 1; i > 0; i--) {
