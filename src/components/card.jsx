@@ -1,3 +1,4 @@
+import '../styles/card.css'
 
 export function Card({imageSrc, championName, handleClick}) {
     return (

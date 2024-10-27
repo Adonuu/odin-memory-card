@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import './App.css';
 import { getChampionNames, getChampionImageSource } from './api.js';
 import { CardContainer } from './components/cardContainer.jsx';
+import { Header } from './components/header.jsx';
+import { Footer } from './components/footer.jsx';
 
 function App() {
   const [playerScore, setPlayerScore] = useState(0);
@@ -83,7 +85,9 @@ function App() {
 
   return (
     <>
+      <Header playerScore={playerScore} bestScore={bestScore}></Header>
       <CardContainer cards={cardArray} />
+      <Footer></Footer>
     </>
   );
 }

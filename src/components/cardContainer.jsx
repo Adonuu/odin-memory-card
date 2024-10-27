@@ -1,4 +1,5 @@
 import { Card } from "./card";
+import '../styles/cardContainer.css'
 
 export function CardContainer({ cards }) {
     return (

@@ -1,0 +1,13 @@
+.footer {
+    background-color: #800000; 
+    display: flex; 
+    flex-flow: row nowrap; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 15px; 
+}
+
+.footer p {
+    max-width: 70ch; 
+    text-align: center; 
+}

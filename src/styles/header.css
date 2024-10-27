@@ -1,0 +1,15 @@
+.header {
+    background-color: #800000; 
+    display: flex; 
+    flex-flow: row nowrap; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 15px; 
+}
+
+.scores {
+    display: flex; 
+    flex-flow: column nowrap; 
+    font-weight: bold; 
+    font-size: 1.5rem; 
+}
